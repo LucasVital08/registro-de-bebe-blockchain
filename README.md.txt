@@ -22,7 +22,9 @@ Na data de hoje, 23 de junho, Dia de São João, realizei o registro de nascimen
 - **Local**: Hospital Barão de Lucena - Recife, Pernambuco, Brasil
 
 - O registro da transação ocorreu gerando Transaction Hash:
-0xef7d8b0276b8f514d4eface9c110d83fc1d3e03362259f66ac56306ebaf9a6d9 
+0xef7d8b0276b8f514d4eface9c110d83fc1d3e03362259f66ac56306ebaf9a6d9
+
+E pode ser visualizada através do link https://etherscan.io/tx/0xef7d8b0276b8f514d4eface9c110d83fc1d3e03362259f66ac56306ebaf9a6d9
 
 ### Decodificação dos Logs
 
