@@ -21,6 +21,9 @@ Na data de hoje, 23 de junho, Dia de São João, realizei o registro de nascimen
 - **Detalhes do Nascimento**: Nascida às 08 horas e 36 minutos do dia 22 de Junho de 2024
 - **Local**: Hospital Barão de Lucena - Recife, Pernambuco, Brasil
 
+- O registro da transação ocorreu gerando Transaction Hash:
+0xef7d8b0276b8f514d4eface9c110d83fc1d3e03362259f66ac56306ebaf9a6d9 
+
 ### Decodificação dos Logs
 
 Os dados registrados podem ser visualizados e decodificados a partir dos logs de eventos na blockchain. Aqui está um exemplo da decodificação manual dos logs:
