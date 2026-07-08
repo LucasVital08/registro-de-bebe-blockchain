@@ -4,9 +4,10 @@ Contrato inteligente em Solidity para registrar dados de nascimento na blockchai
 
 O contrato original (`RegistroDeBebes`) funcionava, mas eu fiz uma auditoria de segurança e evoluí o projeto para corrigir uma série de falhas de controle de acesso, privacidade e design. Este README documenta **o que eu alterei e por quê** — é um projeto de estudo do meu portfólio, no qual usei a IA Claude como ferramenta de apoio ao aprendizado.
 
-## Arquivo principal
+## Estrutura do projeto
 
 - `RegistroDeBebes.sol` — versão corrigida do contrato (renomeada a partir do antigo `registroDeBebes.sol.sol`).
+- `frontend/` — dApp em HTML/CSS/JS + ethers.js para interagir com o contrato via MetaMask (conectar carteira, registrar, consultar, verificar integridade e transferir propriedade). Veja `frontend/README.md`.
 
 ## O que eu aprendi primeiro: estado vs. histórico
 

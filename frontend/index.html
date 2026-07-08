@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Bebê — dApp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Barra superior -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo">👶</div>
+        <div>
+          Registro de Bebê
+          <small>dApp • Ethereum + Solidity</small>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <span id="netBadge" class="net-badge">Rede: —</span>
+        <button id="connectBtn" class="btn btn-primary">Conectar carteira</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="noWallet" class="badge-warn">
+      ⚠️ MetaMask não detectada. Instale a extensão
+      <a href="https://metamask.io/download/" target="_blank" rel="noopener">MetaMask</a>
+      para interagir com o contrato.
+    </div>
+
+    <div class="grid">
+      <!-- Conexão / contrato -->
+      <section class="card grid-full">
+        <div class="card-title"><span class="ic">🔌</span><h2>Conexão &amp; Contrato</h2></div>
+        <p class="desc">Cole o endereço do contrato implantado (deploy) para começar a interagir. O endereço fica salvo neste navegador.</p>
+        <div class="field">
+          <label for="contractAddr">Endereço do contrato</label>
+          <div class="row">
+            <input id="contractAddr" class="mono" placeholder="0x..." />
+            <button id="setContractBtn" class="btn" style="flex:0 0 auto;">Usar contrato</button>
+          </div>
+          <div class="hint">Dica: faça o deploy pelo <a href="https://remix.ethereum.org" target="_blank" rel="noopener">Remix</a> numa testnet (ex.: Sepolia) e cole o endereço aqui.</div>
+        </div>
+
+        <div class="stats" style="margin-top:8px;">
+          <div class="stat"><div class="k">Conta conectada</div><div id="account" class="v mono">—</div></div>
+          <div class="stat"><div class="k">Dono do contrato</div><div id="ownerAddr" class="v mono">—</div></div>
+          <div class="stat"><div class="k">Você é o dono?</div><div class="v"><span id="isOwner" class="pill no">—</span></div></div>
+          <div class="stat"><div class="k">Total de registros</div><div id="total" class="v">—</div></div>
+        </div>
+      </section>
+
+      <!-- Registrar bebê -->
+      <section class="card app-gated disconnected">
+        <div class="card-title"><span class="ic">📝</span><h2>Registrar bebê</h2></div>
+        <p class="desc">Versão didática (grava texto on-chain). Restrito ao dono. Gera também o <span class="mono">dataHash</span>.</p>
+        <div class="field"><label>Nome *</label><input id="r_nome" /></div>
+        <div class="row">
+          <div class="field"><label>Pai</label><input id="r_pai" /></div>
+          <div class="field"><label>Mãe *</label><input id="r_mae" /></div>
+        </div>
+        <div class="field"><label>Detalhes do nascimento</label><textarea id="r_detalhes"></textarea></div>
+        <div class="field"><label>Local</label><input id="r_local" /></div>
+        <button id="registerBtn" class="btn btn-primary btn-block">Registrar</button>
+        <div id="registerResult" class="result hidden"></div>
+      </section>
+
+      <!-- Registrar apenas hash -->
+      <section class="card app-gated disconnected">
+        <div class="card-title"><span class="ic">🔐</span><h2>Registrar apenas hash</h2></div>
+        <p class="desc">Modo recomendado (privacidade): grava só a prova de integridade. Dados reais ficam off-chain.</p>
+        <div class="field">
+          <label>Hash (bytes32)</label>
+          <input id="h_hash" class="mono" placeholder="0x… (32 bytes)" />
+        </div>
+        <details style="margin-bottom:12px;">
+          <summary class="hint" style="cursor:pointer;">Gerar hash a partir dos dados (keccak256)</summary>
+          <div style="margin-top:10px;">
+            <div class="field"><label>Nome</label><input id="g_nome" /></div>
+            <div class="row">
+              <div class="field"><label>Pai</label><input id="g_pai" /></div>
+              <div class="field"><label>Mãe</label><input id="g_mae" /></div>
+            </div>
+            <div class="field"><label>Detalhes</label><input id="g_detalhes" /></div>
+            <div class="field"><label>Local</label><input id="g_local" /></div>
+            <button id="genHashBtn" class="btn btn-sm">Gerar e preencher</button>
+          </div>
+        </details>
+        <button id="registerHashBtn" class="btn btn-primary btn-block">Registrar hash</button>
+        <div id="hashResult" class="result hidden"></div>
+      </section>
+
+      <!-- Consultar -->
+      <section class="card app-gated disconnected">
+        <div class="card-title"><span class="ic">🔎</span><h2>Consultar bebê</h2></div>
+        <p class="desc">Busca um registro pelo id.</p>
+        <div class="field">
+          <label>ID do registro</label>
+          <div class="row">
+            <input id="q_id" type="number" min="0" placeholder="0" />
+            <button id="getBtn" class="btn" style="flex:0 0 auto;">Buscar</button>
+          </div>
+        </div>
+        <div id="getResult" class="result hidden"></div>
+      </section>
+
+      <!-- Verificar / transferir -->
+      <section class="card app-gated disconnected">
+        <div class="card-title"><span class="ic">✅</span><h2>Verificar integridade</h2></div>
+        <p class="desc">Confere se os dados batem com o hash gravado no registro.</p>
+        <div class="field"><label>ID</label><input id="v_id" type="number" min="0" placeholder="0" /></div>
+        <div class="field"><label>Nome</label><input id="v_nome" /></div>
+        <div class="row">
+          <div class="field"><label>Pai</label><input id="v_pai" /></div>
+          <div class="field"><label>Mãe</label><input id="v_mae" /></div>
+        </div>
+        <div class="field"><label>Detalhes</label><input id="v_detalhes" /></div>
+        <div class="field"><label>Local</label><input id="v_local" /></div>
+        <button id="verifyBtn" class="btn btn-block">Verificar</button>
+        <div id="verifyResult" class="result hidden"></div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:20px 0;" />
+        <div class="card-title"><span class="ic">🔑</span><h2>Transferir propriedade</h2></div>
+        <p class="desc">Só o dono pode transferir a titularidade do contrato.</p>
+        <div class="field"><label>Novo dono (endereço)</label><input id="t_addr" class="mono" placeholder="0x..." /></div>
+        <button id="transferBtn" class="btn btn-block">Transferir</button>
+        <div id="transferResult" class="result hidden"></div>
+      </section>
+
+      <!-- Registros -->
+      <section class="card grid-full app-gated disconnected">
+        <div class="card-title" style="justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:10px;"><span class="ic">📜</span><h2>Registros recentes</h2></div>
+          <button id="loadRecordsBtn" class="btn btn-sm">Atualizar</button>
+        </div>
+        <p class="desc">Lidos a partir dos eventos <span class="mono">BebeRegistrado</span> emitidos pelo contrato.</p>
+        <div id="records" class="records"><div class="empty">Conecte a carteira e defina o contrato para listar.</div></div>
+      </section>
+    </div>
+
+    <div class="footer">
+      Projeto de estudo — Solidity &amp; Web3 · Front-end com ethers.js e MetaMask
+    </div>
+  </main>
+
+  <div id="toasts" class="toasts"></div>
+
+  <!-- ethers.js (UMD) via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+  <script src="abi.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
